@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Досье: Шоквейв</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bangers&family=Rubik:wght@400;500;600;700;800&family=Caveat:wght@500;700&family=JetBrains+Mono:wght@500;600&display=swap');
+
+  :root{
+    --card: #a000c4;
+    --pink: #e94fb3;
+    --gold: #c99a4f;
+    --gold-dk: #6e5227;
+    --ink-dark: #17101c;
+    --paper: #f7f2e7;
+    --paper-2: #efe6d2;
+    --caution: #f2c230;
+    --black: #17101c;
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+
+  body{
+    background:
+      radial-gradient(circle at 8px 8px, rgba(233,79,179,0.10) 1.6px, transparent 1.6px),
+      #1c1220;
+    background-size: 18px 18px;
+    color: var(--ink-dark);
+    font-family: 'Rubik', sans-serif;
+    padding: 30px 4vw 90px;
+    overflow-x:hidden;
+  }
+
+  ::selection{ background: var(--card); color: #fff; }
+
+  .hero{
+    position:relative;
+    max-width: 1100px;
+    margin: 0 auto 40px;
+    text-align:center;
+    padding: 50px 20px 30px;
+  }
+  .hero-title{
+    font-family:'Bangers', cursive;
+    font-size: clamp(58px, 11vw, 130px);
+    color: var(--paper);
+    letter-spacing: 0.03em;
+    -webkit-text-stroke: 4px var(--black);
+    text-shadow: 6px 6px 0 var(--card);
+    line-height: 0.9;
+    transform: rotate(-2deg);
+  }
+  .hero-sub{
+    font-family:'Caveat', cursive;
+    font-size: 26px;
+    color: var(--paper-2);
+    margin-top: 10px;
+    transform: rotate(1.5deg);
+  }
+  .hero-sub b{ color: var(--pink); }
+  .hero-stickers img{
+    position:absolute;
+    filter: drop-shadow(3px 4px 3px rgba(0,0,0,0.6));
+  }
+  .st-chain-l{ top: 6px; left: 2%; width:80px; transform: rotate(-18deg); }
+  .st-chain-r{ top: 14px; right: 3%; width:80px; transform: rotate(15deg); }
+  .st-glasses{ bottom: -6px; left: 12%; transform: rotate(-10deg); width:62px; }
+  .st-knux{ bottom: -10px; right: 10%; transform: rotate(12deg); width:64px; }
+
+  .tape{
+    max-width: 1200px; margin: 0 auto 40px;
+    height: 34px;
+    background: repeating-linear-gradient(135deg, var(--caution) 0 22px, var(--black) 22px 44px);
+    display:flex; align-items:center; justify-content:center;
+    transform: rotate(-1deg);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+  }
+  .tape span{
+    background: var(--black); color: var(--caution);
+    font-family:'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing:0.3em; text-transform:uppercase;
+    padding: 4px 18px;
+  }
+
+  .board{ max-width: 1000px; margin: 0 auto; }
+
+  .card{
+    position:relative;
+    background: var(--paper);
+    border: 5px solid var(--black);
+    border-radius: 14px;
+    padding: 30px 34px;
+    margin-bottom: 46px;
+    box-shadow: 8px 10px 0 rgba(0,0,0,0.5);
+  }
+  .card.tilt-l{ transform: rotate(-0.9deg); }
+  .card.tilt-r{ transform: rotate(0.8deg); }
+
+  .card::before{
+    content:'';
+    position:absolute; top:-14px; left:36px;
+    width:90px; height:26px;
+    background: rgba(242,194,48,0.85);
+    border: 2px solid rgba(0,0,0,0.2);
+    transform: rotate(-4deg);
+  }
+
+  .stamp-num{
+    position:absolute; top:-24px; right:-14px;
+    background: var(--card); color:#fff;
+    font-family:'Bangers', cursive; font-size:30px;
+    width:58px; height:58px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    border: 4px solid var(--black);
+    transform: rotate(8deg);
+    box-shadow: 3px 4px 0 rgba(0,0,0,0.4);
+  }
+
+  .card h2{
+    font-family:'Bangers', cursive;
+    font-size: 32px;
+    letter-spacing: 0.02em;
+    color: var(--ink-dark);
+    margin-bottom: 4px;
+    display:inline-block;
+    background: linear-gradient(transparent 60%, rgba(233,79,179,0.35) 60%);
+  }
+  .card h2 small{
+    display:block; font-family:'Caveat', cursive; font-weight:600;
+    font-size: 18px; color:#6b5a3f; margin-top:2px;
+  }
+
+  .card p{ font-size:15.5px; line-height:1.65; color:#33262a; max-width: 62ch; margin-top: 14px; }
+  .card p + p{ margin-top:10px; }
+  .card p strong{ color: var(--card); }
+
+  .stat-strip{
+    display:flex; flex-wrap:wrap; gap:14px; margin-top:16px;
+  }
+  .pill{
+    background: var(--ink-dark); color: var(--paper);
+    border-radius: 20px; padding: 8px 18px;
+    font-family:'JetBrains Mono', monospace; font-size:12.5px;
+    display:flex; gap:8px; align-items:center;
+  }
+  .pill b{ color: var(--gold); font-family:'Rubik',sans-serif; font-weight:700; }
+
+  .note{
+    background: #fff9e0;
+    border: 2px dashed var(--gold-dk);
+    border-radius: 6px;
+    padding: 14px 18px; margin-top: 16px;
+    font-family:'Caveat', cursive; font-size: 19px; color:#4a3a1a;
+    transform: rotate(-0.6deg);
+  }
+  .note b{ font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.14em; text-transform:uppercase; color:var(--card); display:block; margin-bottom:4px; font-weight:700;}
+
+  .sin-band{
+    margin-top: 18px;
+    display:inline-flex; align-items:center; gap:12px;
+    background: var(--black); padding: 10px 22px; border-radius:10px;
+    transform: rotate(-1deg);
+  }
+  .sin-band .k{ font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.16em; color:#aaa; text-transform:uppercase; }
+  .sin-band .v{ font-family:'Bangers',cursive; font-size:24px; color: var(--pink); letter-spacing:0.03em; }
+
+  ul.plain{ list-style:none; margin-top:14px; }
+  ul.plain li{ position:relative; padding-left:26px; margin-bottom:10px; font-size:15.5px; color:#33262a; }
+  ul.plain li::before{
+    content:'✦'; position:absolute; left:0; top:0; color: var(--card); font-size:14px;
+  }
+
+  .weak{
+    margin-top:16px; border-left:5px solid var(--pink);
+    padding-left:14px;
+  }
+  .weak b{ font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--pink); }
+
+  .era{
+    display:inline-block; font-family:'JetBrains Mono',monospace; font-size:10.5px;
+    letter-spacing:0.16em; text-transform:uppercase; color:#fff;
+    background: var(--card); padding:4px 12px; border-radius:4px; margin: 18px 0 8px;
+  }
+
+  .inv-item{
+    display:flex; justify-content:space-between; gap:18px;
+    border-bottom: 2px dashed #cbb98a; padding: 14px 0;
+  }
+  .inv-item .name{ font-weight:700; font-size:15.5px; }
+  .inv-item .desc{ font-size:13.5px; color:#5a4c40; margin-top:4px; max-width:46ch;}
+  .inv-item .tag{
+    font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:0.1em;
+    background:var(--ink-dark); color:var(--gold); padding:4px 10px; border-radius:4px;
+    height:fit-content; white-space:nowrap; text-transform:uppercase;
+  }
+
+  .icon-row{ display:flex; gap:20px; flex-wrap:wrap; margin-top:18px; }
+  .icon-chip{ text-align:center; }
+  .icon-chip img{ width:56px; filter: drop-shadow(2px 3px 2px rgba(0,0,0,0.4)); }
+  .icon-chip span{ display:block; font-family:'Caveat',cursive; font-size:14px; color:#5a4c40; margin-top:2px;}
+
+  .art-grid{ display:grid; grid-template-columns: 1fr 1.25fr; gap:22px; margin-top:18px; }
+  @media (max-width:680px){ .art-grid{ grid-template-columns:1fr; } }
+  .art-frame{
+    background:#fff; border:4px solid var(--black); border-radius:10px; padding:8px;
+    box-shadow: 5px 6px 0 rgba(0,0,0,0.35);
+  }
+  .art-frame img{ width:100%; border-radius:4px; display:block; }
+  .art-frame .cap{ font-family:'Caveat',cursive; font-size:16px; text-align:center; margin-top:4px; color:#5a4c40; }
+  .art-frame.rot-l{ transform: rotate(-2deg); }
+  .art-frame.rot-r{ transform: rotate(1.6deg); }
+
+  footer{
+    text-align:center; margin-top: 20px;
+    font-family:'Caveat', cursive; font-size: 20px; color: rgba(247,242,231,0.55);
+  }
+
+  @media (max-width:600px){
+    .card{ padding:22px 18px; }
+    .stamp-num{ right:-8px; width:46px;height:46px; font-size:24px; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="hero">
+    <div class="hero-stickers">
+      <img class="st-chain-l" src="Chains of Loyalty.png" alt="">
+      <img class="st-chain-r" src="Everlasting Chains of Bond.png" alt="">
+      <img class="st-glasses" src="Rules of the Middle.png" alt="">
+      <img class="st-knux" src="Boombox of Dramatic Entrances.png" alt="">
+    </div>
+    <div class="hero-title">ШОКВЕЙВ</div>
+    <div class="hero-sub">досье семьи <b>«Среднего Пальца»</b> · младшая сестра, за которой должок · №0558A01</div>
+  </div>
+
+  <div class="tape"><span>Собственность Среднего Пальца — не подлежит разглашению</span></div>
+
+  <div class="board">
+
+    <div class="card tilt-l">
+      <div class="stamp-num">01</div>
+      <h2>Имя<small>Фамилия · Прозвище</small></h2>
+      <p>«Шоквейв» — не позывной, а официальное, юридически закреплённое имя. Старое имя вычеркнула сама, добровольно, и заменила на то, каким её звала <strong>Рэтчет</strong>. Другого имени не носит.</p>
+      <div class="note"><b>заметка на полях</b>фамилию так и не назвала.</div>
+    </div>
+
+    <div class="card tilt-r">
+      <div class="stamp-num">02</div>
+      <h2>Рост<small>Возраст · Телосложение</small></h2>
+      <div class="stat-strip">
+        <div class="pill"><b>32</b> года</div>
+        <div class="pill"><b>193 см</b> роста</div>
+        <div class="pill">телосложение: <b>среднее, слегка мускулистое</b></div>
+      </div>
+      <p style="margin-top:18px"><strong>Травмы:</strong> нет правого глаза; правая рука ампутирована и заменена самодельным протезом-оружием.</p>
+    </div>
+
+    <div class="card tilt-l">
+      <div class="stamp-num">03</div>
+      <h2>Принадлежность<small>Синдикат · Ранг</small></h2>
+      <div class="stat-strip">
+        <div class="pill">синдикат: <b>Средний Палец</b></div>
+        <div class="pill">ранг: <b>Младшая Сестра</b></div>
+      </div>
+      <p>Сидит в клубах Середины за исследованиями, а не на передовой — не от слабости, просто её польза именно там. Однако, время от времени ее для галочки все таки вытаскивают сестры и братья на охоту.</p>
+	  </div>
+
+    <div class="card tilt-r">
+      <div class="stamp-num">04</div>
+      <h2>Характер<small>и психологический портрет</small></h2>
+      <p>Холодная, властная, уверена, что видит вещи яснее всех вокруг. Семью Середины считает наивной и сентиментальной — но пользуется их защитой, потому что это самая эффективная сила рядом. Предпочитает себя с ними не сравнивать. В случае опасности, волнений, или чего-то подобного обычно сразу начинает свои попытки командовать, особенно тогда, когда эти самые проблемы могут касаться ее. Большинство окружающих она не воспринимает всерьез, считая что они глупцы что не видят очевидного, однако она даже частично благодарна такому истечению обстоятельств, ведь так в разы легче манипулировать окружением. Себя Шоквейв не то чтобы считает венцом творения, но и проблем с само-оценкой у нее явно не имеется. Любые поставленные задачи от других она воспринимает скорее как предложения чем ей заняться, она предпочитает везде сама решать что и когда она будет делать, даже если на практике ее планы окажутся крайне неэфиктивными.</p>
+
+      <div class="era">4.1 · цели и амбиции</div>
+      <p>Найти Рэтчет. Довести кристаллы до конца — на этот раз без чужого разрешения.</p>
+
+      <div class="era">4.2 · страхи и травмы</div>
+      <p>Панический страх остаться одной, окончательно и без остатка — при полной убеждённости, что лучше других знает, что для них правильно. Связи между этим и своими же поступками не видит.</p>
+
+      <div class="sin-band"><span class="k">4.3 · главный грех</span><span class="v">ЗАВИСТЬ</span></div>
+    </div>
+
+    <div class="card tilt-l">
+      <div class="stamp-num">05</div>
+      <h2>Навыки<small>и слабости</small></h2>
+      <ul class="plain">
+        <li>Блестящий исследователь — химия и инженерия кристаллов на уровне, стоившем ей карьеры в W Corp.</li>
+        <li>Сама спроектировала и собрала протез правой руки, превратив его в боевое орудие с нуля.</li>
+      </ul>
+      <div class="weak"><b>балансирующая слабость</b><p style="margin-top:6px">Почти полностью полагается на кристальную пушку — ближний бой даётся плохо. Боезапас критически ограничен из-за дефицита кристаллов.</p></div>
+      <div class="icon-row">
+        <div class="icon-chip"><img src="The Middle Styled Knuckle-dusters.png"><span>не её стиль</span></div>
+      </div>
+    </div>
+
+    <div class="card tilt-r">
+      <div class="stamp-num">06</div>
+      <h2>Биография</h2>
+
+      <div class="era">до инцидента</div>
+      <p>Исследователь W Corp, работала с напарницей Рэтчет над кристаллами Захолустья, способными и лечить, и уничтожать. Шоквейв настаивала на оружии; Рэтчет — на медицине.</p>
+
+      <div class="era">инцидент</div>
+      <p>Спор перешёл в физическое противостояние. Взрыв нестабилизированного кристалла стоил Шоквейв глаза и руки, Рэтчет — челюсти.</p>
+
+      <div class="era">после</div>
+      <p>Обе уволены, W Corp сочла кристаллы слишком опасными. Шоквейв сбежала с частью образцов и сама построила себе оружие-протез. С тех пор в розыске. Вскоре после потери связи с Рэтчет и сбора протеза вступает в Средний Палец после взвешивания собственных опций, к счастью с доступом к оружию подобному тому что есть у нее, она с легкостью туда попала.</p>
+
+      <div class="era">рэтчет</div>
+      <p>Жива, местонахождение неизвестно ни ей, ни Шоквейв. Считает, что Шоквейв прячется где-то с кристаллами. Поиски не прекращались.</p>
+    </div>
+
+    <div class="card tilt-l">
+      <div class="stamp-num">07</div>
+      <h2>Инвентарь<small>Оружие и снаряжение</small></h2>
+      <div class="inv-item">
+        <div><div class="name">Кристальная пушка-протез</div><div class="desc">Самодельная, выше уровня подворотен, но не мастерская работа. Стреляет кристаллами, уничтожающими материю на клеточном уровне. Боезапас крайне ограничен.</div></div>
+        <div class="tag">оружие</div>
+      </div>
+      <div class="inv-item">
+        <div><div class="name">USB-накопители</div><div class="desc">Данные по стабилизации кристаллов, всегда при себе.</div></div>
+        <div class="tag">данные</div>
+      </div>
+      <div class="inv-item" style="border-bottom:none">
+        <div><div class="name">Кассеты</div><div class="desc">Записи совместной работы с Рэтчет — в основном материалы по исследованиям.</div></div>
+        <div class="tag">архив</div>
+      </div>
+	  <h2>Инвентарь<small>Аугументации</small></h2>
+	  <div class="inv-item">
+	  <div><div class="name">Кристальная пушка-протез</div><div class="desc"></div>Самодельная, выше уровня подворотен, но не мастерская работа. Стреляет кристаллами, уничтожающими материю на клеточном уровне. Боезапас крайне ограничен.</div>
+       	   <div class="tag">оружие</div>
+		   </div>
+	<div class="inv-item">
+	<div><div class="name">Радио-уши</div><div class="desc"></div>Специальный имплант, предназначенный для восстановления возможностей слышать. Без него, с связи с взрывом, девушка крайне плохо слышала. Позволяет слышать звуки разных частот, а также автоматичски транслировать и захватывать радио-волны.</div>
+        <div class="tag">удобство</div>
+		</div>
+    </div>
+
+    <div class="card tilt-r">
+      <div class="stamp-num">08</div>
+      <h2>Арт</h2>
+      <div class="art-grid">
+        <div class="art-frame rot-l"><img src="Shockwave1.png"><div class="cap">портрет</div></div>
+        <div class="art-frame rot-r"><img src="Shockwave2.png"><div class="cap">референс-лист</div></div>
+      </div>
+    </div>
+
+    <div class="card tilt-l">
+      <div class="stamp-num">09</div>
+      <h2>Интересные факты</h2>
+      <div class="note"><b>заметка на полях</b>пока пусто.</div>
+    </div>
+
+  </div>
+
+  <div class="tape"><span>Не нашла — не значит не ищет</span></div>
+
+  <footer>Досье собрано семьёй «Среднего Пальца».</footer>
+
+</body>
+</html>
