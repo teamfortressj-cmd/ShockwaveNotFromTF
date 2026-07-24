@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Досье Среднего Пальца — блокнот</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bangers&family=Rubik:wght@400;500;600;700;800&family=Caveat:wght@500;700&family=JetBrains+Mono:wght@500;600&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap');
+
+  :root{
+    --card: #a000c4;
+    --pink: #e94fb3;
+    --gold: #c99a4f;
+    --gold-dk: #6e5227;
+    --ink-dark: #17101c;
+    --paper: #f7f2e7;
+    --paper-2: #efe6d2;
+    --caution: #f2c230;
+    --black: #17101c;
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html,body{ height:100%; }
+
+  body{
+    background:
+      radial-gradient(circle at 8px 8px, rgba(233,79,179,0.10) 1.6px, transparent 1.6px),
+      #1c1220;
+    background-size: 18px 18px;
+    font-family:'Rubik', sans-serif;
+    display:flex; flex-direction:column; align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    height:100vh;
+  }
+
+  .stage{
+    position:relative;
+    width: min(96vw, 1040px);
+    height: min(92vh, 760px);
+    perspective: 2600px;
+  }
+
+  .page{
+    position:absolute; inset:0;
+    background: var(--paper);
+    border: 5px solid var(--black);
+    border-radius: 14px;
+    box-shadow: 10px 14px 0 rgba(0,0,0,0.5);
+    overflow: hidden;
+    transform-style: preserve-3d;
+    transform-origin: left center;
+    backface-visibility: hidden;
+    transition: transform 0.68s cubic-bezier(.4,.1,.2,1);
+  }
+  .page > .inner{
+    position:absolute; inset:0;
+    overflow-y:auto;
+  }
+  .page.behind{ z-index:1; }
+  .page.active{ z-index:5; transform: rotateY(0deg); }
+  .page.gone-fwd{ z-index:5; transform: rotateY(-172deg); }
+  .page.gone-back{ z-index:5; transform: rotateY(172deg); }
+
+  /* shading overlay to sell the paper curl */
+  .page::after{
+    content:'';
+    position:absolute; inset:0;
+    background: linear-gradient(90deg, rgba(0,0,0,0.28), transparent 40%);
+    opacity:0;
+    transition: opacity 0.68s ease;
+    pointer-events:none;
+  }
+  .page.gone-fwd::after, .page.gone-back::after{ opacity:1; }
+
+  .page iframe{ width:100%; height:100%; border:none; display:block; background:var(--paper); }
+
+  /* ---- nav ---- */
+  .nav{
+    display:flex; align-items:center; gap:18px;
+    margin-top: 18px;
+  }
+  .nav button{
+    font-family:'Bangers', cursive; font-size:22px; letter-spacing:0.04em;
+    background: var(--card); color:#fff;
+    border: 3px solid var(--black); border-radius: 10px;
+    padding: 8px 22px; cursor:pointer;
+    box-shadow: 4px 5px 0 rgba(0,0,0,0.45);
+    transition: transform 0.1s;
+  }
+  .nav button:hover{ transform: translateY(-2px); }
+  .nav button:active{ transform: translateY(1px); box-shadow: 2px 2px 0 rgba(0,0,0,0.45); }
+  .nav button:disabled{ opacity:0.35; cursor:default; }
+  .nav .dots{ display:flex; gap:8px; }
+  .nav .dot{
+    width:10px; height:10px; border-radius:50%;
+    background: rgba(247,242,231,0.25);
+    border: 2px solid var(--black);
+    cursor:pointer;
+  }
+  .nav .dot.on{ background: var(--pink); }
+
+  /* ---- page-1 content: Desmond placeholder ---- */
+  .desmond-wrap{
+    padding: 26px 30px 40px;
+    color: var(--ink-dark);
+  }
+  .d-head{
+    display:flex; gap:22px; align-items:flex-end; margin-bottom: 26px;
+  }
+  .d-head img{
+    width: 150px; height:168px; object-fit:cover;
+    border:5px solid var(--black); border-radius:10px;
+    box-shadow: 5px 6px 0 rgba(0,0,0,0.35);
+    transform: rotate(-2deg);
+  }
+  .d-title{
+    font-family:'Bangers', cursive; font-size: 54px; color: var(--ink-dark);
+    letter-spacing:0.02em; line-height:0.9;
+  }
+  .d-title small{
+    display:block; font-family:'Caveat', cursive; font-size:20px; color:#6b5a3f; margin-top:6px; font-weight:600;
+  }
+  .d-card{
+    background:#fff; border:4px solid var(--black); border-radius:12px;
+    padding: 20px 24px; margin-bottom:20px;
+    box-shadow: 6px 7px 0 rgba(0,0,0,0.3);
+    transform: rotate(-0.5deg);
+  }
+  .d-card h3{ font-family:'Bangers',cursive; font-size:22px; margin-bottom:8px; color:var(--card); }
+  .d-note{
+    background:#fff9e0; border:2px dashed var(--gold-dk); border-radius:6px;
+    padding:12px 16px; font-family:'Caveat',cursive; font-size:18px; color:#4a3a1a;
+  }
+
+  /* ---- page-2 content: chapter ---- */
+  .chapter-wrap{
+    padding: 40px 8vw 60px;
+    background: repeating-linear-gradient(var(--paper), var(--paper) 37px, #e6dcc4 38px);
+    min-height: 100%;
+  }
+  .chapter-title{
+    font-family:'Bangers', cursive; font-size:38px; text-align:center;
+    color: var(--ink-dark); margin-bottom: 6px; transform: rotate(-1deg);
+  }
+  .chapter-sub{
+    text-align:center; font-family:'Caveat',cursive; font-size:19px; color:#7a6a4a; margin-bottom:28px;
+  }
+  .chapter-wrap p{
+    font-family:'PT Serif', serif; font-size:17px; line-height: 38px;
+    color:#241a1e; margin-bottom: 2px;
+    text-indent: 2em;
+  }
+  .chapter-wrap p.center{ text-align:center; text-indent:0; letter-spacing:0.3em; color:#8a7a5a; margin: 10px 0; }
+  .meme-slot{
+    width: 220px; float:right; margin: 4px 0 12px 20px;
+    background:#fff; border:3px dashed var(--gold-dk); border-radius:8px;
+    padding: 10px; text-align:center;
+    font-family:'Caveat', cursive; font-size:16px; color:#8a7a5a;
+    transform: rotate(2deg);
+  }
+  .meme-slot .box{
+    width:100%; aspect-ratio: 1/1;
+    background: repeating-linear-gradient(45deg, #efe6d2, #efe6d2 8px, #e2d5b0 8px, #e2d5b0 16px);
+    border-radius:4px; margin-bottom:6px;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'JetBrains Mono',monospace; font-size:11px; color:#9c8a5a; letter-spacing:0.05em;
+  }
+</style>
+</head>
+<body>
+
+  <div class="stage" id="stage">
+
+    <div class="page active" data-idx="0">
+      <div class="inner">
+        <iframe src="shockwave_dossier.html" title="Шоквейв"></iframe>
+      </div>
+    </div>
+
+    <div class="page" data-idx="1">
+      <div class="inner">
+        <div class="desmond-wrap">
+          <div class="d-head">
+            <img src="Desmond.jpg" alt="Десмонд">
+            <div class="d-title">ДЕСМОНД<small>Большой Брат · Средний Палец</small></div>
+          </div>
+
+          <div class="d-card">
+            <h3>Кто он</h3>
+            <p>Большой Брат Среднего Пальца. Свой титул получил уже давненько, очень ждет повышения до Великого брата.</p>
+          </div>
+
+          <div class="d-card">
+            <h3>Характер</h3>
+            <p>Громкий, экспрессивный, излишне-социальный. Любит тусить со своей семьей, и впринципе за любой движ.</p>
+          </div>
+
+          <div class="d-card">
+            <h3>Роль в семье</h3>
+            <p>Обычный Большой Брат. Обычно отвечает за два ночных клуба в U-Corp, но с недавнего времени на его плечи так-же упала роль няньки Шоквейв.</p>
+          </div>
+
+          <div class="d-card">
+            <h3>Снаряжение</h3>
+            <p>Книга мести, цепи и тату - вот мои документы!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page" data-idx="2">
+      <div class="inner">
+        <div class="chapter-wrap">
+          <div class="chapter-title">Глава первая</div>
+          <div class="chapter-sub">зацепка</div>
+
+          <p>Спустя столько времени...</p>
+          <p class="center">— Сестра? —</p>
+          <p>Наконец-то. Зацепка. Настоящая зацепка.</p>
+          <p class="center">— Сестра! Мелкашка! —</p>
+          <p>Девушка быстро вскочила со стола и отправилась к двери, открывая её своей левой рукой, только чтобы увидеть перед собой груду мышц, более известного как Большой Брат Десмонд.</p>
+          <p>«Что тебе надо?» — спросила Шоквейв, смотря на старшего. Ей сейчас явно было не до него... — «У меня тут дела. Уйди с дороги.»</p>
+          <p>Она попыталась рукой отодвинуть его в сторону, но тот не двинулся с места.</p>
+          <p>«Ну-ну, сестра, что за дела могут быть важнее семьи!» — воскликнул Десмонд, погладив девушку по голове, впрочем, той это судя по всему не сильно понравилось. — «Ты прямо таки оскорбляешь меня, мелкая!»</p>
+          <p>Шутливо сказал он, совсем игнорируя злой взгляд Шоквейв. Впрочем... он довольно быстро превратился в что-то более нейтральное.</p>
+          <p>«Слушай, Десмонд,» — спросила она. Десмонд слегка сфокусировал взгляд за очками, смотря на девушку. Заинтересовался. — «Ты случаем не хочешь сходить на охоту?»</p>
+          <p>На секунду брат совсем замолчал, перед тем как громко рассмеяться.</p>
+          <p>«Хо-хо! Сестра, а я вижу ты наконец повзрослела?!» — он приопустил золотые очки с фиолетовыми линзами ниже на нос, сверкнув оскалом и глазами цвета золота. — «Зачем ты вообще спрашиваешь? Я за любой движ!»</p>
+
+          <p class="center">✦ ✦ ✦</p>
+
+          <p>Прошло уже слегка больше тридцати минут с момента выхода из ночного клуба.</p>
+          <p>Зацепка привела девушку с отрядом в один заброшенный склад, который судя по наводке был заполнен мед. оборудованием и использовался как временное место ночлега для Крыс.</p>
+          <p>К счастью для этих самых Крыс, прошлый владелец даже не позаботился о замке на двери, поэтому те могли спокойно входить и выходить.</p>
+          <p>К несчастью для них, к ним сегодня решила наведаться очень громкая электрическая музыка.</p>
+          <p class="center">БАМ!!</p>
+          <p>С грохотом, и так открытая дверь пролетела в соседний край здания, перед тем как разбиться на доски и щепки.</p>
+          <p>«Так?! Ну и где тот негодяй о котором ты говорила?» — спросил Большой Брат, ударяя кулак о кулак, сотрясая воздух вокруг. — «Время платить по счётам, щенки!»</p>
+          <p>Он зашёл в комнату, наполненную напуганных Крыс и простых жителей.</p>
+          <p>Шоквейв не сильно спешила с ответом, даже наоборот, она медленно вошла в комнату, вечно поправляя цепи и зорким взглядом одного оставшегося глаза осмотрела всех внутри.</p>
+          <p>«Где Рэтчет?» — спросила она, явно не желая никакого ответа кроме точной дислокации упомянутой. — «Отвечайте побыстрее.»</p>
+          <p>Однако, все промолчали.</p>
+          <p>Так же медленно как раньше, она прошла дальше внутрь здания, пока остальные братья агрессивно мерцали цепями в сторону крыс и бедных горожан.</p>
+          <p>Подойдя к столу, находящимся за одной из тканевых занавесок, она осмотрела всё что на нём было, в надежде найти наводки.</p>
+          <p>Однако...</p>
+          <p>Там было почти полностью пусто.</p>
+          <p>Девушка довольно спокойно, на вид, отправилась к выходу, перед тем как одна из Крыс, заметив момент, решив что Шоквейв — главарь всей пачки, спрыгнул с мед. койки, и стеклянным обломком попытался вскрыть ей часть спины.</p>
+          <p>Однако, услышав имплантом резкий звук, оттолкнувшись от земли ногой и приподняв одну из ног слегка вверх, она со всей что есть дури ударила с разворота по боку крысы ногой.</p>
+          <p>Послышался хруст рёбер, после чего крыса улетела к ближайшей стене и сложилась об неё в гармошку. Мясную такую, гармошку.</p>
+
+          <div class="meme-slot"><div class="box"><img src="GoodAnswer.png"></div>СЮДАААА!!!</div>
+          <p>«Хороший ответ мелкая!» — сказал старший брат, прерывая насилие резким смехом и хлопками рук. — «Ладно, что у нас по книге за нападение...»</p>
+
+          <p>«Её тут нет.» — сказала со вздохом Шоквейв, разворачиваясь и направляясь обратно к выходу. — «Братья. Прошу простить за потраченное время. Наводка была пустышкой. Я сама разберусь с информатором.»</p>
+          <p>«Да ничего, сестра, щас мы тут разберёмся и сразу всё устроим.» — говорил брат, не отворачиваясь от фиолетовой книги в его руках. — «Ну так вот... где я остановился...»</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="nav">
+    <button id="prevBtn">← НАЗАД</button>
+    <div class="dots" id="dots"></div>
+    <button id="nextBtn">ВПЕРЁД →</button>
+  </div>
+
+<script>
+  const pages = Array.from(document.querySelectorAll('.page'));
+  const dotsWrap = document.getElementById('dots');
+  let current = 0;
+
+  pages.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' on' : '');
+    d.addEventListener('click', () => goTo(i));
+    dotsWrap.appendChild(d);
+  });
+  const dots = Array.from(dotsWrap.children);
+
+  function render(){
+    pages.forEach((p, i) => {
+      p.classList.remove('active','gone-fwd','gone-back');
+      if(i < current) p.classList.add('gone-fwd');
+      else if(i > current) p.classList.remove(); // stays default (flat, behind)
+      if(i === current) p.classList.add('active');
+    });
+    dots.forEach((d,i) => d.classList.toggle('on', i === current));
+    document.getElementById('prevBtn').disabled = current === 0;
+    document.getElementById('nextBtn').disabled = current === pages.length - 1;
+  }
+
+  function goTo(target){
+    if(target === current || target < 0 || target >= pages.length) return;
+    current = target;
+    render();
+  }
+
+  document.getElementById('nextBtn').addEventListener('click', () => goTo(current + 1));
+  document.getElementById('prevBtn').addEventListener('click', () => goTo(current - 1));
+
+  document.addEventListener('keydown', e => {
+    if(e.key === 'ArrowRight') goTo(current + 1);
+    if(e.key === 'ArrowLeft') goTo(current - 1);
+  });
+
+  // touch swipe
+  let touchX = null;
+  const stage = document.getElementById('stage');
+  stage.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; });
+  stage.addEventListener('touchend', e => {
+    if(touchX === null) return;
+    const dx = e.changedTouches[0].clientX - touchX;
+    if(Math.abs(dx) > 60){ dx < 0 ? goTo(current + 1) : goTo(current - 1); }
+    touchX = null;
+  });
+
+  render();
+</script>
+
+</body>
+</html>
